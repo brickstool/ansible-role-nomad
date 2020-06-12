@@ -70,7 +70,7 @@ That allows for dynamically specifying a configuration file located in `/etc/con
 Using the example configuration file in this role (`templates/ctpl.nomad.hcl.j2`) along with the `systemd` unit file block above, you would execute the following command to enable and start the service:
 
 ```sh
-$ sudo systemctl enable --now consul-template@consul.service
+$ sudo systemctl enable --now consul-template@nomad.service
 ```
 
 ## Example Playbook
