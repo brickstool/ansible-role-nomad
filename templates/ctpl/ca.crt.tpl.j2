@@ -1,0 +1,2 @@
+{{- with secret "[[ _ctpl_nomad_vault_pki_engine ]]/issue/[[ _ctpl_nomad_vault_pki_role ]]" "common_name=[[ _ctpl_nomad_vault_pki_cn ]]" "ttl=24h" }}
+{{- .Data.issuing_ca }}{{ end }}

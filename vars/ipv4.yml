@@ -1,0 +1,5 @@
+---
+__nomad_ipv4_iface: "{{ ansible_default_ipv4.interface }}"
+__nomad_ipv4_net: "{{ ansible_default_ipv4.network }}"
+__nomad_ipv4_mask: "{{ ansible_default_ipv4.netmask }}"
+...

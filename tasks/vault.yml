@@ -1,0 +1,41 @@
+---
+- name: Login to Vault and grab a token
+  uri:
+    url: "{{ nomad_vault_auth_url | default(nomad_vault_url) }}/v1/auth/ldap/login/{{ nomad_vault_ldap_user }}"
+    method: POST
+    validate_certs: no
+    body_format: json
+    body:
+      password: "{{ nomad_vault_ldap_pass }}"
+  register: __nomad_ldap_login
+  delegate_to: localhost
+  run_once: true
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: nomad_server and nomad_vault_ldap_enabled
+
+- name: Generate a token with a policy allowing access to the token-role from Nomad servers
+  uri:
+    url: "{{ nomad_vault_auth_url | default(nomad_vault_url) }}/v1/auth/token/create"
+    method: POST
+    validate_certs: no
+    body_format: json
+    body:
+      policies: ["{{ nomad_vault_policy }}"]
+      no_parent: true
+      renewable: true
+      period: "24h"
+    headers:
+      X-Vault-Token: "{{ nomad_vault_auth_token | default(__nomad_ldap_login.json.auth.client_token) }}"
+  register: __nomad_vault_token
+  ignore_errors: "{{ ansible_check_mode }}"
+  notify: restart nomad with vault token
+  when: nomad_server
+
+- name: Create the vault config file from a template
+  template:
+    src: vault.hcl.j2
+    dest: /etc/nomad.d/vault.hcl
+    owner: "{{ nomad_user }}"
+    group: "{{ nomad_group }}"
+  notify: reload nomad
+...

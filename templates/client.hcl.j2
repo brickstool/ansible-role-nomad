@@ -1,0 +1,52 @@
+#jinja2: trim_blocks:False
+{{ ansible_managed | comment }}
+
+client {
+  enabled                  = true
+  network_interface        = "{{ nomad_ipv4_iface }}"
+  gc_disk_usage_threshold  = 99
+  gc_inode_usage_threshold = 99
+
+{% if nomad_client_meta | length > 0 %}
+  meta {
+{%- for dict in nomad_client_meta %}
+{%- for key, value in dict.items() %}
+  "{{ key }}" = "{{ value }}"{% endfor %}{% if not loop.last %}
+{%- endif %}
+{%- endfor %}
+  }
+{%- endif %}
+}
+
+ports {
+  http = 5656
+}
+
+plugin "docker" {
+  config {
+    volumes {
+      enabled      = true
+{%- if ansible_selinux is defined and ansible_selinux != False and ansible_selinux.status == 'enabled' %}
+      selinuxlabel = "z"
+{%- endif %}
+    }
+
+    allow_privileged = {{ nomad_docker_privileged }}
+{%- if nomad_docker_caps is defined %}
+    allow_caps       = [
+{%- for cap in nomad_docker_caps %}
+      "{{ cap }}"{% if not loop.last %},
+{%- endif %}
+{%- endfor %}
+    ]
+{%- endif %}
+  }
+}
+
+{% if 'raw_exec' in nomad_plugins %}
+plugin "raw_exec" {
+  config {
+    enabled = true
+  }
+}
+{% endif %}

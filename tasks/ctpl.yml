@@ -1,0 +1,63 @@
+---
+# By default certs won't be validated for the following two tasks.
+- name: Login to Vault and grab a token
+  uri:
+    url: "{{ nomad_vault_auth_url | default(nomad_vault_url) }}/v1/auth/ldap/login/{{ nomad_vault_ldap_user }}"
+    method: POST
+    validate_certs: no
+    body_format: json
+    body:
+      password: "{{ nomad_vault_ldap_pass }}"
+  register: __ctpl_ldap_login
+  delegate_to: localhost
+  run_once: true
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: nomad_vault_ldap_enabled
+
+- name: Generate a Vault token
+  uri:
+    url: "{{ nomad_vault_auth_url | default(nomad_vault_url) }}/v1/auth/token/create"
+    method: POST
+    validate_certs: no
+    body_format: json
+    body:
+      policies: ["{{ ctpl_nomad_vault_policy }}"]
+      no_parent: true
+      renewable: true
+      period: "24h"
+    headers:
+      X-Vault-Token: "{{ nomad_vault_auth_token | default(__ctpl_ldap_login.json.auth.client_token) }}"
+  register: __ctpl_vault_token
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Transfer the template which contains the generated Vault token
+  template:
+    src: ctpl/vault-token-nomad.j2
+    dest: /root/.vault-token-nomad
+    mode: '0600'
+    owner: root
+    group: root
+  notify: reload consul-template@nomad
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Transfer the consul-template configuration file for Nomad
+  template:
+    src: ctpl.nomad.hcl.j2
+    dest: /etc/consul-template.d/nomad.hcl
+    mode: '0640'
+  notify: reload consul-template@nomad
+
+- name: Set ctpl variables so that literal '{{' and '}}' are not passed to the template
+  include_tasks: ctpl_variables.yml
+
+- name: Transfer the consul-template certificate templates
+  template:
+    src: "{{ item }}"
+    dest: "/opt/nomad/templates/{{ item | basename | regex_replace('\\.j2$', '') }}"
+    mode: '0640'
+    variable_start_string: '[['
+    variable_end_string: ']]'
+  with_fileglob:
+    - '../templates/ctpl/*.j2'
+  notify: reload consul-template@nomad
+...

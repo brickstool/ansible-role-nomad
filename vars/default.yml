@@ -1,0 +1,4 @@
+---
+__nomad_client: true
+__nomad_client_server: false
+...

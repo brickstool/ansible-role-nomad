@@ -1,0 +1,108 @@
+---
+- name: Ensure that the nomad_group group exists
+  group:
+    name: "{{ nomad_group }}"
+  when: nomad_server and nomad_group != 'root'
+
+- name: Ensure that the nomad_user user exists
+  user:
+    name: "{{ nomad_user }}"
+    home: /etc/nomad.d
+    groups: "{{ nomad_group }}"
+    append: yes
+    shell: /bin/false
+    system: yes
+    state: present
+  when: nomad_server and nomad_user != 'root'
+
+- name: Create the Nomad config directory
+  file:
+    path: /etc/nomad.d
+    state: directory
+    mode: '0700'
+    owner: "{{ nomad_user }}"
+    group: "{{ nomad_group }}"
+
+- name: Create the Nomad data directory and subdirectories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ nomad_user }}"
+    group: "{{ nomad_group }}"
+  with_items:
+    - /opt/nomad/agent-certs
+    - /opt/nomad/cli-certs
+    - /opt/nomad/plugins
+    - /opt/nomad/templates
+
+# The following 'set_fact' tasks make sure that variable interpolation works as
+# expected.
+- name: Define _nomad_datacenter
+  set_fact:
+    _nomad_datacenter: "{{ nomad_datacenter }}"
+  when: _nomad_datacenter is not defined
+
+- name: Define _nomad_ipv4_bind
+  set_fact:
+    _nomad_ipv4_bind: "{{ nomad_ipv4_bind }}"
+  when: _nomad_ipv4_bind is not defined
+
+- name: Define _nomad_network
+  set_fact:
+    _nomad_network: "{{ (nomad_ipv4_net + '/' + nomad_ipv4_mask) | ipaddr('net') }}"
+  when: _nomad_network is not defined
+
+- name: Create the common configuration file from a template
+  template:
+    src: common.hcl.j2
+    dest: /etc/nomad.d/common.hcl
+    variable_start_string: "[["
+    variable_end_string: "]]"
+    owner: "{{ nomad_user }}"
+    group: "{{ nomad_group }}"
+  notify: reload nomad
+
+- name: Create the server configuration file from a template
+  template:
+    src: server.hcl.j2
+    dest: /etc/nomad.d/server.hcl
+    owner: "{{ nomad_user }}"
+    group: "{{ nomad_group }}"
+  notify: reload nomad
+  when: nomad_server
+
+- name: Create the client config file from a template
+  template:
+    src: client.hcl.j2
+    dest: /etc/nomad.d/client.hcl
+    owner: "{{ nomad_user }}"
+    group: "{{ nomad_group }}"
+  notify: reload nomad
+  when: nomad_client
+
+- name: Create the consul config file from a template
+  template:
+    src: consul.hcl.j2
+    dest: /etc/nomad.d/consul.hcl
+    owner: "{{ nomad_user }}"
+    group: "{{ nomad_group }}"
+  notify: reload nomad
+
+- name: Create the tls config file from a template
+  template:
+    src: tls.hcl.j2
+    dest: /etc/nomad.d/tls.hcl
+    owner: "{{ nomad_user }}"
+    group: "{{ nomad_group }}"
+  notify: restart nomad
+  when: nomad_tls_enabled
+
+- name: Create the telemetry config file from a template
+  template:
+    src: telemetry.hcl.j2
+    dest: /etc/nomad.d/telemetry.hcl
+    owner: "{{ nomad_user }}"
+    group: "{{ nomad_group }}"
+  notify: reload nomad
+  when: nomad_telemetry_enabled
+...

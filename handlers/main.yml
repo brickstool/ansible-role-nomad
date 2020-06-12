@@ -1,0 +1,39 @@
+---
+- name: restart nomad with vault token
+  systemd:
+    daemon_reload: true
+    name: nomad
+    state: restarted
+  environment:
+    VAULT_TOKEN: "{{ __nomad_vault_token }}"
+  when: nomad_server and __nomad_vault_token is defined
+  register: _nomad_vault_restart
+
+- name: restart nomad
+  systemd:
+    daemon_reload: true
+    name: nomad
+    state: restarted
+  when: (_nomad_vault_restart is not defined or not _nomad_vault_restart.changed) and
+        nomad_upgrade.stat.exists
+  register: _nomad_restart
+
+- name: reload nomad
+  systemd:
+    daemon_reload: true
+    name: nomad
+    state: reloaded
+  when: _nomad_restart is not defined or not _nomad_restart.changed
+
+- name: restart consul-template@nomad
+  systemd:
+    daemon_reload: true
+    name: consul-template@nomad
+    state: restarted
+
+- name: reload consul-template@nomad
+  systemd:
+    daemon_reload: true
+    name: consul-template@nomad
+    state: reloaded
+...

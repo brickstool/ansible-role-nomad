@@ -1,0 +1,44 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: nomad
+  author: brickstool
+  description: Nomad installation and configuration.
+  license: "license (BSD, MIT)"
+  min_ansible_version: 2.8
+  platforms:
+    - name: EL
+      versions:
+        - 7
+        - 8
+    - name: Fedora
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - jessie
+        - stretch
+        - buster
+        - bullseye
+    - name: Ubuntu
+      versions:
+        - xenial
+        - yakkety
+        - zesty
+        - artful
+        - bionic
+        - cosmic
+        - disco
+        - eoan
+        - focal
+  galaxy_tags:
+    - consul
+    - vault
+    - nomad
+    - orchestration
+    - containers
+    - docker
+    - cloud
+    - clustering
+    - networking

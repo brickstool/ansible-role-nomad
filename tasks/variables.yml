@@ -1,0 +1,33 @@
+---
+# Set default Nomad configuration variables
+- include_vars: default.yml
+
+- name: Define nomad_client
+  set_fact:
+    nomad_client: "{{ __nomad_client }}"
+  when: not nomad_server and nomad_client is not defined
+
+- name: Define nomad_client for servers
+  set_fact:
+    nomad_client: "{{ __nomad_client_server }}"
+  when: nomad_server and nomad_client is not defined
+
+# Set IPV4 variables
+- include_vars: ipv4.yml
+
+- name: Define nomad_ipv4_iface
+  set_fact:
+    nomad_ipv4_iface: "{{ __nomad_ipv4_iface }}"
+  when: nomad_ipv4_iface is not defined
+
+- name: Define nomad_ipv4_net
+  set_fact:
+    nomad_ipv4_net: "{{ __nomad_ipv4_net }}"
+  when: nomad_ipv4_net is not defined
+
+- name: Define nomad_ipv4_mask
+  set_fact:
+    nomad_ipv4_mask: "{{ __nomad_ipv4_mask }}"
+  when: nomad_ipv4_mask is not defined
+...
+

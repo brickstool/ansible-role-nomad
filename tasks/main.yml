@@ -1,0 +1,36 @@
+---
+# Configure variables for role
+- include_tasks: variables.yml
+
+- name: Check to see if Nomad is already installed for upgrade purposes
+  stat:
+    path: /usr/local/bin/nomad
+  register: nomad_upgrade
+
+# Install and configure Nomad
+- include_tasks: install.yml
+- include_tasks: config.yml
+
+# Optional tasks to configure Vault settings for Nomad
+- include_tasks: vault.yml
+  when: nomad_vault_enabled
+
+# Optional tasks to configure consul-template for Nomad
+- include_tasks: ctpl.yml
+  when: nomad_ctpl_enabled
+
+- name: Ensure Nomad is started and enabled
+  systemd:
+    daemon_reload: true
+    name: nomad
+    state: started
+    enabled: true
+
+- name: Ensure consul-template@nomad is started and enabled
+  systemd:
+    daemon_reload: true
+    name: consul-template@nomad
+    state: started
+    enabled: true
+  when: nomad_ctpl_enabled
+...

@@ -1,0 +1,238 @@
+---
+# The version of Nomad to install.
+nomad_version: '0.11.3'
+
+#
+# feature-flags - The following variables enable or disable their respective
+# Nomad configuration options.
+#
+
+# Controls whether the target host will be configured as a Nomad server.
+nomad_server: false
+
+# Controls whether the target host will be configured as a Nomad client. This
+# variable defaults to false when the target host is a Nomad server AND
+# nomad_client is not defined for the target host. Otherwise defaults to true.
+# Loaded by the variables.yml task.
+# nomad_client: true
+
+# Whether to configure telemetry settings for Nomad. Defaults to false.
+nomad_telemetry_enabled: false
+
+# Boolean that controls if TLS settings will be configured for Nomad. Defaults
+# to false.
+nomad_tls_enabled: false
+
+# Whether to configure Vault settings for Nomad. Defaults to false.
+nomad_vault_enabled: false
+
+# Boolean to enable or disable LDAP auth with Vault. Disabled by default.
+nomad_vault_ldap_enabled: false
+
+# Whether to configure consul-template settings for Nomad. Defaults to false.
+nomad_ctpl_enabled: false
+
+#
+# general - The following variables set general configuration options for
+# Nomad.
+#
+
+# The Nomad datacenter to join. Defaults to 'dc1'.
+nomad_datacenter: dc1
+
+# The number of Nomad servers to wait for before bootstrapping. Defaults to 1.
+# Set to 3 or 5 in a production deployment.
+nomad_bootstrap_expect: 1
+
+# The encryption string used to encrypt Nomad gossip communications.
+nomad_encrypt_string: ""
+
+# The address that Nomad will bind to.
+nomad_ipv4_bind: '0.0.0.0'
+
+# Sets the Nomad user and group. Note that Nomad clients need to be root.
+nomad_user: root
+nomad_group: root
+
+# Various IPV4 settings used by Nomad. Default to the discovered facts under
+# the 'ansible_default_ipv4' key. These variables are set by the variables.yml
+# task.
+# nomad_ipv4_iface: "{{ ansible_default_ipv4.iface }}"
+# nomad_ipv4_net: "{{ ansible_default_ipv4.network }}"
+# nomad_ipv4_mask: "{{ ansible_default_ipv4.netmask }}"
+
+#
+# client - The variables below relate to the client configuration of Nomad.
+#
+
+# A list of dictionaries to use as Nomad client metadata. By default this list
+# is empty.
+nomad_client_meta: []
+# - key: value
+# - foo: bar
+# - beep: boop
+
+# A list of plugins that will be enabled for the Nomad client. Nomad enables
+# the 'exec' and docker plugins by default so don't include that in this list.
+# Right now only the raw_exec plugin is supported by this role.
+nomad_plugins: []
+# - raw_exec
+
+# Whether Nomad clients can create privileged Docker containers. False by
+# default.
+nomad_docker_privileged: false
+
+# A list of allowed capabilities for Docker containers. Undefined by default.
+# Set this to "ALL" to whitelist all capabilities.
+# nomad_docker_caps: []
+# - ALL
+
+#
+# tls - The variables below relate to the TLS configuration of Nomad.
+#
+
+# The path to the CA file for Nomad TLS communication. Undefined by default.
+# nomad_tls_ca: /etc/ssl/certs/nomad.crt
+
+# The path to the certificate file for Nomad TLS communication. Undefined by
+# default.
+# nomad_tls_cert: /etc/ssl/private/agent.nomad.crt
+
+# The path to the key file for Nomad TLS communication. Undefined by default.
+# nomad_tls_key: /etc/ssl/private/agent.nomad.key
+
+# Boolean that controls if Nomad will verify the TLS certificate of Nomad
+# servers. Undefined by default.
+# nomad_tls_verify_server: false
+
+# Boolean that controls if Nomad will verify the TLS certificate of Nomad
+# clients. Undefined by default.
+# nomad_tls_verify_client: false
+
+# Boolean that controls if Nomad will accept both encrypted and unencrypted
+# traffic. Used when enabling TLS on an existing Nomad cluster. Undefined by
+# default.
+# nomad_tls_rpc_upgrade: false
+
+#
+# consul - The variables below relate to the Consul configuration of Nomad.
+#
+
+# The URL or 'host:port' address to the local Consul agent. This can also be a
+# UNIX socket using a format of 'unix:///var/run/consul.sock'.
+nomad_consul_url: '127.0.0.1:8500'
+
+# The username:password for Consul HTTP basic auth. Undefined by default.
+# nomad_consul_auth: ''
+
+# The Consul ACL token to configure for the Nomad agent. Undefined by default.
+# nomad_consul_token: ''
+
+# Tags to register in Consul for the Nomad agent service. Empty by default.
+nomad_consul_service_tags: []
+# - "foo"
+# - "metrics"
+# - "urlprefix=/v1/agent"
+
+# Whether to enable TLS communication with the Consul agent. Default to false.
+nomad_consul_tls_enabled: false
+
+# The path to the CA file for Consul TLS communication. Undefined by default.
+# nomad_consul_tls_ca: /etc/ssl/certs/consul.crt
+
+# The path to the certificate file for Consul TLS communication. Undefined by
+# default.
+# nomad_consul_tls_cert: /etc/ssl/private/agent.consul.crt
+
+# The path to the key file for Consul TLS communication. Undefined by default.
+# nomad_consul_tls_key: /etc/ssl/private/agent.consul.key
+
+# Boolean that controls whether TLS verification will be enabled for Nomad when
+# communicating with Consul. Undefined by default.
+# nomad_consul_tls_verify: true
+
+#
+# vault - The following variables relate to the Vault configuration for Nomad.
+#
+
+# The address that Nomad will use to communicate with Vault. The default
+# assumes you are using a Consul-enabled Vault instance.
+nomad_vault_url: "https://active.vault.service.consul:8200"
+
+# The URL to be used by Ansible to find Vault. Use this if your Ansible control
+# node is not able to use Consul for discovery of the Vault service. Undefined
+# by default.
+# nomad_vault_auth_url: "https://10.0.0.2:8200"
+
+# The token to be used by Ansible to authenticate with Vault and generate a
+# token for Nomad or consul-template. Use this variable when you don't have
+# LDAP authentication configured for Vault. Undefined by default.
+# nomad_vault_auth_token: ''
+
+# The LDAP credentials used by Ansible when authenticating with Vault.
+# Undefined by default.
+# nomad_vault_ldap_user: 'username'
+# nomad_vault_ldap_pass: 'password'
+
+# The Vault policy to attach to the generated token. By default, this is
+# 'nomad-server' as that is what the official Nomad guide for Vault mTLS uses.
+nomad_vault_policy: 'nomad-server'
+
+# The Vault token role to derive child token from. By default, this is
+# 'nomad-cluster' as this is what the official Nomad guide for Vault mTLS uses.
+nomad_vault_create_from_role: 'nomad-cluster'
+
+# The path to the CA file for Nomad TLS communication with Vault. Undefined by default.
+# nomad_vault_tls_ca: /etc/ssl/certs/vault.crt
+
+# The path to the certificate file for Nomad TLS communication with Vault. Undefined by
+# default.
+# nomad_vault_tls_cert: /etc/ssl/private/agent.vault.crt
+
+# The path to the key file for Nomad TLS communication with Vault. Undefined by default.
+# nomad_vault_tls_key: /etc/ssl/private/agent.vault.key
+
+# If Nomad should verify the certificates of the Vault server. This controls
+# whether 'tls_skip_verify' is present within the Vault stanza used in Nomad
+# configuration - setting this variable to false creates the 'tls_skip_verify'
+# key and sets it to true, since you want to SKIP verification.
+nomad_vault_tls_verify: true
+
+#
+# ctpl - The following variables relate to the consul-template configuration
+# for Nomad.
+#
+
+# The Vault policy used in generating tokens for consul-template. By default,
+# this is 'tls-policy' as that is what the official Nomad guide for Vault mTLS
+# uses.
+ctpl_nomad_vault_policy: 'tls-policy'
+
+# The Vault PKI engine for generating TLS certificates. Used in the templates
+# found under 'templates/ctpl/'. By default this is 'pki_int' as that is what
+# the official Nomad guide for Vault mTLS uses.
+ctpl_nomad_vault_pki_engine: 'pki_int'
+
+# The Vault PKI role for generating Nomad TLS certificates. Used in the
+# templates found under 'templates/ctpl/'. By default this is 'nomad-cluster'
+# as that is what the official Nomad guide for Vault mTLS uses.
+ctpl_nomad_vault_pki_role: 'nomad-cluster'
+
+# The common name to use when generating TLS certificates for Nomad agents.
+# Used in the templates found under 'templates/ctpl/'. This should be set to
+# 'server.global.nomad' for Nomad servers, and 'client.global.nomad' for Nomad
+# clients. Defaults to client.global.nomad since you will likely have more
+# clients than servers.
+ctpl_nomad_vault_pki_cn: "client.global.nomad"
+
+# A list of SANs to use for generating Nomad TLS certificates. Used in the
+# templates found under 'templates/ctpl/'. By default only localhost is used.
+ctpl_nomad_vault_pki_sans:
+  - localhost
+  # - "{{ ansible_fqdn }}"
+
+# A list of IP addresses to use as SANS when generating Nomad TLS certificates.
+# By default only '127.0.0.1' is used.
+ctpl_nomad_vault_pki_ip_sans:
+  - '127.0.0.1'
+  # - "{{ ansible_default_ipv4.address }}"

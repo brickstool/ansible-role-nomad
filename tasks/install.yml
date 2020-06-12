@@ -1,0 +1,34 @@
+---
+# tasks file for noordhuis.nomad
+- name: Download and unzip the Nomad archive locally
+  unarchive:
+    src: "https://releases.hashicorp.com/nomad/{{ nomad_version }}/nomad_{{ nomad_version }}_linux_amd64.zip"
+    dest: /tmp/
+    remote_src: yes
+    mode: '0755'
+  delegate_to: localhost
+  run_once: true
+  when: not ansible_check_mode
+
+- name: Transfer the nomad binary to the target hosts
+  copy:
+    src: /tmp/nomad
+    dest: /usr/local/bin/nomad
+    mode: '0755'
+    owner: root
+    group: root
+  notify: restart nomad
+  when: not ansible_check_mode
+
+- name: Enable Nomad's autocomplete
+  command: |
+    nomad -autocomplete-install
+    complete -C /usr/local/bin/nomad nomad
+  when: not nomad_upgrade.stat.exists
+
+- name: Copy across the Nomad systemd service unit file
+  template:
+    src: nomad.service.j2
+    dest: /etc/systemd/system/nomad.service
+  notify: restart nomad
+...

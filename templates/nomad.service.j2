@@ -1,0 +1,30 @@
+[Unit]
+Description=Nomad
+Documentation=https://nomadproject.io/docs/
+Wants=network-online.target consul.service
+After=network-online.target consul.service
+StartLimitBurst=3
+StartLimitIntervalSec=10
+
+[Service]
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/local/bin/nomad agent -config /etc/nomad.d
+KillMode=process
+KillSignal=SIGINT
+LimitNOFILE=infinity
+LimitNPROC=infinity
+OOMScoreAdjust=-1000
+Restart=always
+RestartSec=2
+TasksMax=infinity
+{% if nomad_server %}
+{% if nomad_user is defined and nomad_user != 'root' %}
+User={{ nomad_user }}
+{% endif %}
+{% if nomad_group is defined and nomad_group != 'root' %}
+Group={{ nomad_group }}
+{% endif %}
+{% endif %}
+
+[Install]
+WantedBy=multi-user.target

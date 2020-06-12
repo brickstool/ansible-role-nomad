@@ -1,0 +1,20 @@
+#jinja2: trim_blocks:False
+{{ ansible_managed | comment }}
+
+tls {
+  http                   = true
+  rpc                    = true
+  ca_file                = "{{ nomad_tls_ca }}"
+  cert_file              = "{{ nomad_tls_cert }}"
+  key_file               = "{{ nomad_tls_key }}"
+
+{%- if nomad_tls_verify_server is defined %}
+  verify_server_hostname = {{ nomad_tls_verify_server | lower }}
+{%- endif %}
+{%- if nomad_tls_verify_client is defined %}
+  verify_https_client    = {{ nomad_tls_verify_client | lower }}
+{%- endif %}
+{%- if nomad_tls_rpc_upgrade is defined %}
+  rpc_upgrade_mode       = {{ nomad_tls_rpc_upgrade }}
+{%- endif %}
+}

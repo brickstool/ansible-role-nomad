@@ -1,0 +1,13 @@
+#jinja2: trim_blocks:False
+[[ ansible_managed | comment ]]
+
+datacenter = "[[ _nomad_datacenter ]]"
+data_dir = "/opt/nomad"
+plugin_dir = "/opt/nomad/plugins"
+
+bind_addr = "[[ _nomad_ipv4_bind ]]"
+advertise {
+  http = "{{ GetPrivateInterfaces | include \"network\" \"[[ _nomad_network ]]\" | attr \"address\" }}"
+  rpc = "{{ GetPrivateInterfaces | include \"network\" \"[[ _nomad_network ]]\" | attr \"address\" }}"
+  serf = "{{ GetPrivateInterfaces | include \"network\" \"[[ _nomad_network ]]\" | attr \"address\" }}"
+}

@@ -1,0 +1,115 @@
+#jinja2: trim_blocks:False
+{{ ansible_managed | comment }}
+
+pid_file      = "/run/consul-template-nomad.pid"
+reload_signal = "SIGHUP"
+kill_signal   = "SIGINT"
+max_stale     = "10m"
+log_level     = "info"
+
+syslog {
+  enabled  = true
+  facility = "LOCAL5"
+}
+
+wait {
+  min = "30s"
+  max = "90s"
+}
+
+consul {
+  address       = "{{ nomad_consul_url }}"
+
+{%- if nomad_consul_auth is defined %}
+  auth {
+    enabled     = true
+    username    = "{{ nomad_consul_auth.split(':')[0] }}
+    password    = "{{ nomad_consul_auth.split(':')[1] }}
+  }
+{%- endif %}
+
+  retry {
+    enabled     = true
+    attempts    = 12
+    backoff     = "250ms"
+    max_backoff = "1m"
+  }
+
+{%- if nomad_consul_tls_enabled %}
+  ssl {
+    enabled     = true
+    ca_cert     = "{{ nomad_consul_tls_ca }}"
+    cert        = "{{ nomad_consul_tls_cert }}"
+    key         = "{{ nomad_consul_tls_key }}"
+{%- if nomad_consul_tls_verify is defined %}
+    verify      = {{ nomad_consul_tls_verify | lower }}
+{%- endif %}
+  }
+{%- endif %}
+}
+
+vault {
+  address = "{{ nomad_vault_url }}"
+  vault_agent_token_file = "/root/.vault-token-nomad"
+  renew_token = true
+
+  retry {
+    enabled     = true
+    attempts    = 12
+    backoff     = "250ms"
+    max_backoff = "1m"
+  }
+
+  ssl {
+    enabled = true
+    ca_cert = "{{ nomad_vault_tls_ca }}"
+{%- if nomad_vault_tls_cert is defined %}
+    cert    = "{{ nomad_vault_tls_cert }}"
+{%- endif %}
+{%- if nomad_vault_tls_key is defined %}
+    key     = "{{ nomad_vault_tls_key }}"
+{%- endif %}
+{%- if nomad_vault_tls_verify is defined %}
+    verify  = {{ nomad_vault_tls_verify | lower }}
+{%- endif %}
+  }
+}
+
+template {
+  source           = "/opt/nomad/templates/agent.crt.tpl"
+  destination      = "{{ nomad_tls_cert }}"
+  create_dest_dirs = true
+  perms            = 0600
+  command          = "systemctl reload nomad"
+  command_timeout  = "30s"
+  wait {
+    min = "30s"
+    max = "90s"
+  }
+}
+
+template {
+  source           = "/opt/nomad/templates/agent.key.tpl"
+  destination      = "{{ nomad_tls_key }}"
+  create_dest_dirs = true
+  perms            = 0600
+  command          = "systemctl reload nomad"
+  command_timeout  = "30s"
+  wait {
+    min = "30s"
+    max = "90s"
+  }
+}
+
+template {
+  source           = "/opt/nomad/templates/ca.crt.tpl"
+  destination      = "{{ nomad_tls_ca }}"
+  create_dest_dirs = true
+  perms            = 0644
+  command          = "systemctl reload nomad"
+  command_timeout  = "30s"
+  wait {
+    min = "30s"
+    max = "90s"
+  }
+}

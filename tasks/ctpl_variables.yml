@@ -1,0 +1,26 @@
+---
+- name: Define _ctpl_nomad_vault_pki_engine
+  set_fact:
+    _ctpl_nomad_vault_pki_engine: "{{ ctpl_nomad_vault_pki_engine }}"
+  when: _ctpl_nomad_vault_pki_engine is not defined
+
+- name: Define _ctpl_nomad_vault_pki_role
+  set_fact:
+    _ctpl_nomad_vault_pki_role: "{{ ctpl_nomad_vault_pki_role }}"
+  when: _ctpl_nomad_vault_pki_role is not defined
+
+- name: Define _ctpl_nomad_vault_pki_cn
+  set_fact:
+    _ctpl_nomad_vault_pki_cn: "{{ ctpl_nomad_vault_pki_cn }}"
+  when: _ctpl_nomad_vault_pki_cn is not defined
+
+- name: Define _ctpl_nomad_vault_pki_sans
+  set_fact:
+    _ctpl_nomad_vault_pki_sans: "{{ ctpl_nomad_vault_pki_sans }}"
+  when: _ctpl_nomad_vault_pki_sans is not defined
+
+- name: Define _ctpl_nomad_vault_pki_ip_sans
+  set_fact:
+    _ctpl_nomad_vault_pki_ip_sans: "{{ ctpl_nomad_vault_pki_ip_sans }}"
+  when: _ctpl_nomad_vault_pki_ip_sans is not defined
+...
