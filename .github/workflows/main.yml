@@ -1,5 +1,3 @@
-name: master
-
 on:
   push:
     path-ignore:
