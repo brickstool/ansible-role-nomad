@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  tasks:
+    - name: "Include brickstool.consul"
+      include_role:
+        name: "brickstool.consul"
+    - name: "Include ansible-role-nomad"
+      include_role:
+        name: "ansible-role-nomad"
