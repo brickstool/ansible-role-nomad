@@ -1,6 +1,6 @@
 ---
-# Set default Nomad configuration variables
-- include_vars: default.yml
+- name: Set default Nomad configuration variables
+  include_vars: default.yml
 
 - name: Define nomad_client
   set_fact:
@@ -12,8 +12,8 @@
     nomad_client: "{{ __nomad_client_server }}"
   when: nomad_server and nomad_client is not defined
 
-# Set IPV4 variables
-- include_vars: ipv4.yml
+- name: Set IPV4 variables
+  include_vars: ipv4.yml
 
 - name: Define nomad_ipv4_iface
   set_fact:
