@@ -1,16 +1,16 @@
 # Ansible Role: Nomad
 
-This role installs and configures a Nomad cluster on Linux systems that use systemd.
-There are a few assumptions made by this role.
+This role installs and configures a Nomad cluster on Linux systems that use `systemd`.
+There are a few assumptions made by this role:
 
-The first is that you are using Nomad with alongside a Consul cluster as this is the easiest way to configure Nomad (and gives you that sweet, sweet service discovery).
+* Nomad will be installed inside of a Consul cluster
+* Nomad servers will be separate from Nomad clients (this is the recommended way to deploy a Nomad in a production environment)
+* If there is a Vault environment present, it is configured as per the official Nomad guides for Vault integration
 
-Another assumption is that you will have separate Nomad servers and clients - this is the recommended way to deploy a Nomad in a production environment.
-
-Finally, it assumes that if you wanted to enable and leverage HashiCorp Vault integration, you are likely following the official guides to integrating Vault into Nomad (particularly around mTLS and Vault token retrieval and renewal).
-
-The role has a few optional features locked behind boolean variables that act as 'feature-flags', and they are set to false by default.
+The role has a few optional features locked behind boolean variables that act as 'feature-flags'.
+They are set to false by default.
 To enable them, simply set the relevant variable to 'true' and the 'feature-flag' will be enabled.
+
 An example of this is the HashiCorp Vault integration, which is hidden behind the `nomad_vault_enabled` variable.
 
 All role variables are documented in `defaults/main.yml` with comments explaining (and examples showing) their usage.
@@ -22,16 +22,16 @@ For the Ansible controller:
 * The `unzip` system package
 
 For the target hosts/environment:
-* Linux OS
-* systemd
-* A Consul cluster
+* Linux
+* `systemd`
+* Consul cluster
 * (Optional) A Vault cluster with the PKI secrets engine enabled
 
 ## Dependencies
 
-If you do not already have a Consul cluster installed and configured, you can use my [Ansible role for consul](https://github.com/brickstool/ansible-role-consul) which can do this for you.
+If you do not already have a Consul cluster installed and configured, you can use my [Ansible role for consul](https://github.com/brickstool/ansible-role-consul) to create one.
 
-If you want to use consul-template, then you will also require that too  - my [Ansible role for consul-template](https://github.com/brickstool/ansible-role-consul-template) will do this for you.
+If you want to use `consul-template`, then you will also require that too  - my [Ansible role for `consul-template`](https://github.com/brickstool/ansible-role-consul-template) will do this for you.
 
 You can install both roles via `ansible-galaxy` like so:
 
@@ -40,7 +40,7 @@ ansible-galaxy install brickstool.consul
 ansible-galaxy install brickstool.consul_template
 ```
 
-The consul-template role installs a instantiated systemd service template for consul-template.
+The consul-template role installs a instantiated `systemd` service template for `consul-template`.
 The unit file will look a little like the following:
 
 ```ini
@@ -76,7 +76,7 @@ $ sudo systemctl enable --now consul-template@nomad.service
 ## Example Playbook
 
 The following examples are the minimum configuration you would need to successfully run this role.
-It is assumed you already have a working Consul cluster and that each node has a local Consul agent configured.
+It is assumed you have a working Consul cluster, and each node has a Consul agent running locally.
 Generate an actual encryption key for `nomad_encrypt_string` using `nomad operator keygen`, replacing "encryptme123" with the generated key in the examples below.
 
 *For a group of 3 Nomad server nodes*:
