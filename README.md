@@ -1,11 +1,11 @@
 # Ansible Role: Nomad
 
 This role installs and configures a Nomad cluster on Linux systems that use `systemd`.
-There are a few assumptions made by this role:
+A few assumptions made by this role are that:
 
 * Nomad will be installed inside of a Consul cluster
 * Nomad servers will be separate from Nomad clients (this is the recommended way to deploy a Nomad in a production environment)
-* If there is a Vault environment present, it is configured as per the official Nomad guides for Vault integration
+* (Optional) The Vault instance/cluster present is configured as per the official Nomad guides for [Vault](https://www.nomadproject.io/docs/integrations/vault-integration/) [integration](https://learn.hashicorp.com/nomad/vault-integration/vault-pki-nomad)
 
 The role has a few optional features locked behind boolean variables that act as 'feature-flags'.
 They are set to false by default.
@@ -29,7 +29,7 @@ For the target hosts/environment:
 
 ## Dependencies
 
-If you do not already have a Consul cluster installed and configured, you can use my [Ansible role for consul](https://github.com/brickstool/ansible-role-consul) to create one.
+If you do not already have a Consul cluster installed and configured, you can use my [Ansible role for Consul](https://github.com/brickstool/ansible-role-consul) to create one.
 
 If you want to use `consul-template`, then you will also require that too  - my [Ansible role for `consul-template`](https://github.com/brickstool/ansible-role-consul-template) will do this for you.
 
@@ -40,7 +40,7 @@ ansible-galaxy install brickstool.consul
 ansible-galaxy install brickstool.consul_template
 ```
 
-The consul-template role installs a instantiated `systemd` service template for `consul-template`.
+The `consul-template` role installs a instantiated `systemd` service template for `consul-template`.
 The unit file will look a little like the following:
 
 ```ini
