@@ -113,7 +113,3 @@ MIT / BSD
 Created by Samuel Noordhuis in 2020. Inspired heavily by the Ansible roles and writings of [Jeff Geerling](https://github.com/geerlingguy).
 
 If you see any errors or think this role could be improved in some way, you are welcome to open an issue/feature request or create a pull request :)
-
-## TO-DO
-
-1. Add molecule tests

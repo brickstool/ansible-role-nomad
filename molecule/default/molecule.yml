@@ -1,0 +1,40 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: nomad-server
+    image: centos:8
+    command: /sbin/init
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - server
+  - name: nomad-client
+    image: centos:8
+    command: /sbin/init
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - client
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        consul_encrypt_string: 'NlJcajOKaGiitpFQBLA7BlDlu25PSm3AkRUYAI2MixE='
+        consul_retry_join:
+          - "[[ hostvars['nomad-server']['ansible_default_ipv4']['address'] ]]"
+        nomad_encrypt_string: 'iQ8Sgh7ynY9U15hTIsOQZg=='
+      server:
+        consul_server: true
+        nomad_server: true
+      client:
+        nomad_client: true
