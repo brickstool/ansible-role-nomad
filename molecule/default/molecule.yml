@@ -33,7 +33,7 @@ provisioner:
       all:
         consul_encrypt_string: 'NlJcajOKaGiitpFQBLA7BlDlu25PSm3AkRUYAI2MixE='
         consul_retry_join:
-          - "[[ hostvars['nomad-server']['ansible_default_ipv4']['address'] ]]"
+          - "{{ hostvars['nomad-server']['ansible_default_ipv4']['address'] }}"
         nomad_encrypt_string: 'iQ8Sgh7ynY9U15hTIsOQZg=='
       server:
         consul_server: true
