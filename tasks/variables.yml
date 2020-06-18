@@ -30,4 +30,3 @@
     nomad_ipv4_mask: "{{ __nomad_ipv4_mask }}"
   when: nomad_ipv4_mask is not defined
 ...
-
