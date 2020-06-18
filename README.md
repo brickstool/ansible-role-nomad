@@ -1,4 +1,4 @@
-![](https://github.com/brickstool/ansible-role-nomad/workflows/master/badge.svg?branch=master)
+![master](https://github.com/brickstool/ansible-role-nomad/workflows/master/badge.svg?branch=master)
 
 # Ansible Role: Nomad
 
