@@ -1,2 +1,2 @@
----
-- src: brickstool.consul
+roles:
+  - brickstool.consul
