@@ -1,3 +1,5 @@
+![](https://github.com/brickstool/ansible-role-consul/workflows/master/badge.svg?branch=master)
+
 # Ansible Role: Nomad
 
 This role installs and configures a Nomad cluster on Linux systems that use `systemd`.
