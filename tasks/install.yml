@@ -1,9 +1,8 @@
 ---
-# tasks file for noordhuis.nomad
 - name: Download and unzip the Nomad archive locally
   unarchive:
     src: "https://releases.hashicorp.com/nomad/{{ nomad_version }}/nomad_{{ nomad_version }}_linux_amd64.zip"
-    dest: /tmp/
+    dest: /tmp
     remote_src: yes
     mode: '0755'
   delegate_to: localhost
@@ -24,7 +23,7 @@
   command: |
     nomad -autocomplete-install
     complete -C /usr/local/bin/nomad nomad
-  when: not nomad_upgrade.stat.exists
+  when: nomad_upgrade.stat.exists is defined and not nomad_upgrade.stat.exists
 
 - name: Copy across the Nomad systemd service unit file
   template:
