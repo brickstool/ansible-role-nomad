@@ -7,7 +7,7 @@ plugin_dir = "/opt/nomad/plugins"
 
 bind_addr = "[[ _nomad_ipv4_bind ]]"
 advertise {
-  http = "{{ GetPrivateInterfaces | include \"network\" \"[[ _nomad_network ]]\" | attr \"address\" }}"
-  rpc = "{{ GetPrivateInterfaces | include \"network\" \"[[ _nomad_network ]]\" | attr \"address\" }}"
-  serf = "{{ GetPrivateInterfaces | include \"network\" \"[[ _nomad_network ]]\" | attr \"address\" }}"
+  http = "{{ GetInterfaceIP \"[[ _nomad_ipv4_iface ]]\" }}"
+  rpc = "{{ GetInterfaceIP \"[[ _nomad_ipv4_iface ]]\" }}"
+  serf = "{{ GetInterfaceIP \"[[ _nomad_ipv4_iface ]]\" }}"
 }

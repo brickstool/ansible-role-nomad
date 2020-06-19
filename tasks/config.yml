@@ -47,10 +47,10 @@
     _nomad_ipv4_bind: "{{ nomad_ipv4_bind }}"
   when: _nomad_ipv4_bind is not defined
 
-- name: Define _nomad_network
+- name: Define _nomad_ipv4_iface
   set_fact:
-    _nomad_network: "{{ (nomad_ipv4_net + '/' + nomad_ipv4_mask) | ipaddr('net') }}"
-  when: _nomad_network is not defined
+    _nomad_ipv4_iface: "{{ nomad_ipv4_iface }}"
+  when: _nomad_ipv4_iface is not defined
 
 - name: Create the common configuration file from a template
   template:
