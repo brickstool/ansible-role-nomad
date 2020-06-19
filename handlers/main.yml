@@ -5,7 +5,7 @@
     name: nomad
     state: restarted
   environment:
-    VAULT_TOKEN: "{{ __nomad_vault_token }}"
+    VAULT_TOKEN: "{{ __nomad_vault_token.json.auth.client_token }}"
   when: nomad_server and __nomad_vault_token is defined
   register: _nomad_vault_restart
 

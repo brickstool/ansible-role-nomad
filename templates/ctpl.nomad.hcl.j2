@@ -62,7 +62,9 @@ vault {
 
   ssl {
     enabled = true
+{%- if nomad_vault_tls_ca is defined %}
     ca_cert = "{{ nomad_vault_tls_ca }}"
+{%- endif %}
 {%- if nomad_vault_tls_cert is defined %}
     cert    = "{{ nomad_vault_tls_cert }}"
 {%- endif %}

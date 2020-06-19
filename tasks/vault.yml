@@ -28,6 +28,7 @@
       X-Vault-Token: "{{ nomad_vault_auth_token | default(__nomad_ldap_login.json.auth.client_token) }}"
   register: __nomad_vault_token
   ignore_errors: "{{ ansible_check_mode }}"
+  changed_when: True
   notify: restart nomad with vault token
   when: nomad_server
 
