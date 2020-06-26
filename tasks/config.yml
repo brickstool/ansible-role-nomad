@@ -88,6 +88,13 @@
     group: "{{ nomad_group }}"
   notify: reload nomad
 
+- name: Copy across the environment file for the Nomad systemd service
+  template:
+    src: envfile.nomad.j2
+    dest: "{{ nomad_environment_file }}"
+  notify: restart nomad
+  when: nomad_tls_enabled
+
 - name: Create the tls config file from a template
   template:
     src: tls.hcl.j2

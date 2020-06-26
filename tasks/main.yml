@@ -28,11 +28,11 @@
     state: started
     enabled: true
 
-- name: Ensure consul-template@nomad is started and enabled
+- name: Restart consul-template@nomad
   systemd:
     daemon_reload: true
     name: consul-template@nomad
-    state: started
+    state: restarted
     enabled: true
   when: nomad_ctpl_enabled
 ...

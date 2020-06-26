@@ -1,5 +1,5 @@
 ---
-__nomad_environment_file: /etc/environment
+__nomad_environment_file: /etc/default/nomad
 __nomad_client: true
 __nomad_client_server: false
 ...
