@@ -1,5 +1,5 @@
 ---
-__nomad_envfile: /etc/sysconfig/nomad
+__nomad_environment_file: /etc/sysconfig/nomad
 __nomad_client: true
 __nomad_client_server: false
 ...
