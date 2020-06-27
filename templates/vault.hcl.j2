@@ -17,5 +17,6 @@ vault {
 {%- endif %}
 {%- if nomad_server %}
   create_from_role = "{{ nomad_vault_create_from_role }}"
+  token            = "{{ __nomad_vault_token.json.auth.client_token }}"
 {%- endif %}
 }
