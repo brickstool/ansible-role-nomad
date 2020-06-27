@@ -93,7 +93,7 @@
     src: envfile.nomad.j2
     dest: "{{ nomad_environment_file }}"
   notify: restart nomad
-  when: nomad_tls_enabled
+  when: nomad_consul_tls_enabled
 
 - name: Create the tls config file from a template
   template:
