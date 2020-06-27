@@ -1,6 +1,5 @@
 #jinja2: trim_blocks:False
 {{ ansible_managed | comment }}
-
 vault {
   enabled          = true
   address          = "{{ nomad_vault_url }}"
@@ -8,10 +7,10 @@ vault {
   ca_file          = "{{ nomad_vault_tls_ca }}"
 {%- endif %}
 {%- if nomad_vault_tls_cert is defined %}
-  cert_file  = "{{ nomad_vault_tls_cert }}"
+  cert_file        = "{{ nomad_vault_tls_cert }}"
 {%- endif %}
 {%- if nomad_vault_tls_key is defined %}
-  key_file  = "{{ nomad_vault_tls_key }}"
+  key_file         = "{{ nomad_vault_tls_key }}"
 {%- endif %}
 {%- if nomad_vault_tls_verify is defined and not nomad_vault_tls_verify %}
   tls_skip_verify  = true

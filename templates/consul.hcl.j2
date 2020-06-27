@@ -1,6 +1,5 @@
 #jinja2: trim_blocks:False
 {{ ansible_managed | comment }}
-
 consul {
   address    = "{{ nomad_consul_url }}"
 {%- if nomad_consul_token is defined %}
@@ -9,18 +8,18 @@ consul {
 {%- if nomad_consul_auth is defined %}
   auth = "{{ nomad_consul_auth }}"
 {%- endif %}
+{%- if nomad_consul_tls_enabled %}
 
-{% if nomad_consul_tls_enabled %}
   ssl        = true
   ca_file    = "{{ nomad_consul_tls_ca }}"
   cert_file  = "{{ nomad_consul_tls_cert }}"
   key_file   = "{{ nomad_consul_tls_key }}"
 {%- if nomad_consul_tls_verify is defined %}
-  verify_ssl = "{{ nomad_consul_tls_verify }}"
+  verify_ssl = {{ nomad_consul_tls_verify | bool | lower }}
 {%- endif %}
 {%- endif %}
+{%- if nomad_consul_service_tags | length > 0 %}
 
-{% if nomad_consul_service_tags | length > 0 %}
   tags = [
 {%- for tag in nomad_consul_service_tags %}
     "{{ tag }}"{% if not loop.last %},
