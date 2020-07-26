@@ -32,7 +32,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
+      - name: Install npm dependencies
+        run: npm install -g semantic-release conventional-changelog-conventionalcommits @semantic-release/github @semantic-release/changelog @semantic-release/git
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
+        run: semantic-release
