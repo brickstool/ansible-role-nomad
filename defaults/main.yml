@@ -1,6 +1,6 @@
 ---
 # The version of Nomad to install.
-nomad_version: '0.11.3'
+nomad_version: '0.12.1'
 
 #
 # feature-flags - The following variables enable or disable their respective
