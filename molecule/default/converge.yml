@@ -3,9 +3,9 @@
   hosts: all
   become: true
   tasks:
-    - name: "Include brickstool.consul"
+    - name: "Include snoord.consul"
       include_role:
-        name: "brickstool.consul"
+        name: "snoord.consul"
     - name: "Include ansible-role-nomad"
       include_role:
         name: "ansible-role-nomad"

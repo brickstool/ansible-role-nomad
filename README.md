@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="https://github.com/brickstool/ansible-role-nomad/actions">
-    <img alt="GitHub Actions" src="https://github.com/brickstool/ansible-role-nomad/workflows/build/badge.svg?branch=master">
+  <a href="https://github.com/snoord/ansible-role-nomad/actions">
+    <img alt="GitHub Actions" src="https://github.com/snoord/ansible-role-nomad/workflows/build/badge.svg?branch=master">
   </a>
   <a href="https://github.com/semantic-release/semantic-release">
     <img alt="semantic-release" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg">
@@ -39,15 +39,15 @@ For the target hosts/environment:
 
 ## Dependencies
 
-If you do not already have a Consul cluster installed and configured, you can use my [Ansible role for Consul](https://github.com/brickstool/ansible-role-consul) to create one.
+If you do not already have a Consul cluster installed and configured, you can use my [Ansible role for Consul](https://github.com/snoord/ansible-role-consul) to create one.
 
-If you want to use `consul-template`, then you will also require that too  - my [Ansible role for `consul-template`](https://github.com/brickstool/ansible-role-consul-template) will do this for you.
+If you want to use `consul-template`, then you will also require that too  - my [Ansible role for `consul-template`](https://github.com/snoord/ansible-role-consul-template) will do this for you.
 
 You can install both roles via `ansible-galaxy` like so:
 
 ```sh
-ansible-galaxy install brickstool.consul
-ansible-galaxy install brickstool.consul_template
+ansible-galaxy install snoord.consul
+ansible-galaxy install snoord.consul_template
 ```
 
 The `consul-template` role installs a instantiated `systemd` service template for `consul-template`.
@@ -95,7 +95,7 @@ Generate an actual encryption key for `nomad_encrypt_string` using `nomad operat
 - hosts: nomad-servers
   become: yes
   roles:
-    - role: brickstool.nomad
+    - role: snoord.nomad
       vars:
         nomad_server: true #Setting this to true automatically sets `nomad_client` to false (unless otherwise specified)
         nomad_bootstrap_expect: 3
@@ -108,7 +108,7 @@ Generate an actual encryption key for `nomad_encrypt_string` using `nomad operat
 - hosts: nomad-clients
   become: yes
   roles:
-    - role: brickstool.nomad
+    - role: snoord.nomad
       vars:
         nomad_client: true #Assumed true by default, included here for clarity
         nomad_encrypt_string: 'encryptme123='
