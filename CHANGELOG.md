@@ -1,3 +1,11 @@
+### [1.0.1](https://github.com/snoord/ansible-role-nomad/compare/1.0.0...1.0.1) (2020-09-29)
+
+
+### Bug Fixes
+
+* target ./files/ dir as dest, not the path to the bin itself ([a809eb9](https://github.com/snoord/ansible-role-nomad/commit/a809eb9a138a8afb93f36e026d80cfc033c0ed2d))
+* use role_path to store nomad binary, not /tmp ([9fef284](https://github.com/snoord/ansible-role-nomad/commit/9fef284bc9f09cfed5009a6ec0379efbf446cc33))
+
 ## [1.0.0](https://github.com/snoord/ansible-role-nomad/compare/0.2.0...1.0.0) (2020-09-04)
 
 
