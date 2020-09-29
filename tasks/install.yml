@@ -2,7 +2,7 @@
 - name: Download and unzip the Nomad archive locally
   unarchive:
     src: "https://releases.hashicorp.com/nomad/{{ nomad_version }}/nomad_{{ nomad_version }}_linux_amd64.zip"
-    dest: /tmp
+    dest: "{{ role_path }}/files/nomad"
     remote_src: yes
     mode: '0755'
   delegate_to: localhost
@@ -11,7 +11,7 @@
 
 - name: Transfer the nomad binary to the target hosts
   copy:
-    src: /tmp/nomad
+    src: "{{ role_path }}/files/nomad"
     dest: /usr/local/bin/nomad
     mode: '0755'
     owner: root
